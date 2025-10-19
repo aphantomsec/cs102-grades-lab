@@ -15,19 +15,22 @@ class TestGradeAnalyzer(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         # Create a temporary CSV file for testing
-        self.test_csv = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv')
-        self.test_csv.write("Name,Homework,Midterm,Final\n")
-        self.test_csv.write("Student A,80,85,90\n")
-        self.test_csv.write("Student B,90,90,90\n")
-        self.test_csv.write("Student C,70,75,80\n")
-        self.test_csv.close()
+        fd, self.test_csv_path = tempfile.mkstemp(suffix='.csv', text=True)
+        with os.fdopen(fd, 'w') as f:
+            f.write("Name,Homework,Midterm,Final\n")
+            f.write("Student A,80,85,90\n")
+            f.write("Student B,90,90,90\n")
+            f.write("Student C,70,75,80\n")
         
-        self.analyzer = GradeAnalyzer(self.test_csv.name)
+        self.analyzer = GradeAnalyzer(self.test_csv_path)
         self.analyzer.read_grades()
     
     def tearDown(self):
         """Clean up test fixtures."""
-        os.unlink(self.test_csv.name)
+        try:
+            os.unlink(self.test_csv_path)
+        except OSError:
+            pass  # File might already be deleted
     
     def test_read_grades(self):
         """Test reading grades from CSV file."""
