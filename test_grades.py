@@ -15,7 +15,7 @@ class TestGradeAnalyzer(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         # Create a temporary CSV file for testing
-        fd, self.test_csv_path = tempfile.mkstemp(suffix='.csv', text=True)
+        fd, self.test_csv_path = tempfile.mkstemp(suffix='.csv')
         with os.fdopen(fd, 'w') as f:
             f.write("Name,Homework,Midterm,Final\n")
             f.write("Student A,80,85,90\n")
